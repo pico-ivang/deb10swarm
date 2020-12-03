@@ -19,7 +19,6 @@ i=$1
 	--memballoon model=virtio \
 	--noautoconsole
 
-#: '
 echo "sleep 60 - waiting node to start"
 echo "[          ]"
 sleep 6
@@ -42,7 +41,6 @@ sleep 6
 echo "[######### ]"
 sleep 6
 echo "[##########]"
-#'
 
 `pwd`\/set_node_hostname.sh deb10node$i
 

@@ -13,3 +13,5 @@ for i in $(seq 1 $nodecount); do
     virsh start deb10node$i
     sleep 10
 done
+
+exit
