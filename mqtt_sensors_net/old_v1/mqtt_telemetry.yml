@@ -1,0 +1,28 @@
+- hosts: allswarm
+  tasks:
+    - name: Installs mosquitto client tools 
+      apt: pkg=mosquitto-clients state=installed update_cache=true
+
+    - name: Push telemetry.sh to /srv
+      copy: src=telemetry.sh dest=/srv/ mode=0755
+
+    - name: Push telemetry_send.sh to /srv
+      copy: src=telemetry_send.sh dest=/srv/ mode=0755
+
+    - name: Push vsens.sh to /srv
+      copy: src=vsens.sh dest=/srv/ mode=0755
+
+
+    - name: adds telemetry send cronjob
+      cron: minute="*/1"
+        name="every minute send telemetry"
+        cron_file="telemetry-send"
+        user="root"
+        job="/srv/telemetry_send.sh /srv/telemetry.sh"
+
+    - name: adds vsensors send cronjob
+      cron: minute="0" hour="*/1"
+        name="every hour send vsensors"
+        cron_file="vsens-send"
+        user="root"
+        job="/srv/telemetry_send.sh /srv/vsens.sh"

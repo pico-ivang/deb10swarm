@@ -4,9 +4,6 @@
 # t_mot - темп мотора
 # leak - датчик протечки
 
-function telegram_alert (){
-    /srv/telegram_send.sh "Alerta!!!   xolodilnik $nodename - $1 detected!"
-}
 
 source /srv/mqtt.vars
 
@@ -17,11 +14,22 @@ leak=`cat /srv/leak.txt`
 t_in_prev=`cat /srv/t_in_prev.txt`
 t_mot_prev=`cat /srv/t_mot_prev.txt`
 
+# what if we aren`t succeed somewhere
 
-# what if no prev values
-if [ -z $leak ]; then leak=0; fi
-if [ -z $t_in_prev ]; then t_in_prev=-10; fi
-if [ -z $t_mot_prev ]; then t_mot_prev=25; fi
+if [ -z $leak ];
+then
+ leak=0
+fi
+
+if [ -z $t_in_prev ];
+then
+ t_in_prev=-10
+fi
+
+if [ -z $t_mot_prev ];
+then
+ t_mot_prev=25
+fi
 
 
 # coin flip shows us the way - increase or decreace t_in
@@ -45,8 +53,11 @@ echo "new t_in = "$t_in
 echo $t_in > /srv/t_in_prev.txt
 
 # alerting
-if [ $t_in -ge $t_in_alert ]; then telegram_alert "inner OVERHEATING"; fi
-
+if [ $t_in -ge $t_in_alert ]; then 
+    /srv/telegram_send.sh "Alerta!!!"
+    /srv/telegram_send.sh "xolodilnik  $nodename"
+    /srv/telegram_send.sh "OVERHEATING!"
+fi
 
 t_mot=`shuf --input-range=$t_mot_step --head-count=1`
 echo "t_mot * mod_sign + t_mot_prev = " $t_mot" * "$t_mot_sign" + "$t_mot_prev
@@ -55,10 +66,18 @@ echo "new t_mot = "$t_mot
 echo $t_mot > /srv/t_mot_prev.txt
 
 # alerting
-if [ $t_mot -ge $t_mot_alert ]; then telegram_alert "MOTOR OVERHEAT"; fi
+if [ $t_mot -ge $t_mot_alert ]; then
+    /srv/telegram_send.sh "Alerta!!!"
+    /srv/telegram_send.sh "xolodilnik $nodename"
+    /srv/telegram_send.sh "MOTOR OVERHEAT!"
+fi
 
-# alerting
-if [ $leak -eq "1" ]; then telegram_alert "LEAKAGE"; fi
+
+if [ $leak -eq "1" ]; then 
+    /srv/telegram_send.sh "Alerta!!!"
+    /srv/telegram_send.sh "xolodilnik $nodename"
+    /srv/telegram_send.sh "LEACKAGE detected!"
+fi
 
 mosquitto_pub -d \
  -i $nodename \

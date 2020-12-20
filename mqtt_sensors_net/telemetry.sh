@@ -1,25 +1,32 @@
 #!/bin/bash
+# скрипт отправляет телеметрию хоста - больше чтоб держать руку на пульсу шлюза
+# если жив - то по какому адресу виден
 
-mqtt_host=$1
-mqtt_port=$2
-mqtt_user=$3
-mqtt_pass=$4
-mqtt_topic=$5"/"$(hostname -s)
+# load global vars
+source /srv/mqtt.vars
 
+echo " "
+echo " "
+echo " mqtt_topic = "$mqtt_topic
+
+
+# get IP addr
 ip_address=`hostname -i | head -1`
-echo $ip_address
+if [ ${#ip_address} -lt 3 ]; then ip_address="none"; fi
+echo " ip_address = "$ip_address
 
-if [ ${#ip_address} -lt 3 ]
-then
-    ip_address="none"
-fi
+# get hostname
+#nodename=$(hostname -f)
+echo " nodename   = "$nodename
 
-nodename=$(hostname -f)
-echo $nodename
-
+# get uptime
 uptime=`uptime -p`
+echo " uptime     = "$uptime
 
-mosquitto_pub \
+
+# send dataset
+mosquitto_pub -d \
+ -i $nodename \
  -h $mqtt_host \
  -p $mqtt_port \
  -u $mqtt_user \

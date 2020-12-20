@@ -1,0 +1,8 @@
+- hosts: allswarm
+  tasks:
+    - name: telemetry.sh
+      command: /srv/telemetry.sh
+    - name: vsens.sh
+      command: /srv/vsens.sh
+    - name: restart cron
+      command: systemctl restart cron
