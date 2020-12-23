@@ -1,20 +1,17 @@
 #!/bin/bash
 
-read -p "name of node -> " nodename
-read -p "memory MB -> " nodemem
-read -p "vcpus -> " nodevcpus
-
-    echo "creating node "$nodename
+i=$1
+    echo "creating node "$i
 
     echo "copying from template ..."
-    dd if=deb10template.img of=$nodename.img bs=1M
+    dd if=deb10template.img of=deb10node$i.img bs=1M
 
-    echo "launching node "$nodename
+    echo "launching node "$i
     virt-install \
-	--name $nodename \
-	--memory $nodemem \
-	--vcpus $nodevcpus \
-	--disk /home/kvm/vms/debswarm/$nodename.img \
+	--name deb10node$i \
+	--memory 1024 \
+	--vcpus 1 \
+	--disk /home/kvm/vms/debswarm/deb10node$i.img \
 	--boot hd \
 	--os-variant debian9 \
 	--network bridge=kvmbr-debswarm \
@@ -22,6 +19,7 @@ read -p "vcpus -> " nodevcpus
 	--memballoon model=virtio \
 	--noautoconsole
 
+#: '
 echo "sleep 60 - waiting node to start"
 echo "[          ]"
 sleep 6
@@ -44,7 +42,8 @@ sleep 6
 echo "[######### ]"
 sleep 6
 echo "[##########]"
+#'
 
-`pwd`\/set_node_hostname.sh $nodename
+`pwd`\/set_node_hostname.sh deb10node$i
 
 exit
