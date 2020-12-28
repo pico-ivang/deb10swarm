@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# run this to get vagrant without installing it system-wide
+#
+# before you begin - take a look and config the stuff
+
+# set proj/deb10/conf/id_rsa.pub of your user to communicate to 
+#
+# Vagrantfile - is your Vagrantfile to spawn machines.
+# check the iface name to bridge to - I`m  bridging to "kvmbr-debswarm" by default
+# and set the number of vms to spawn
+
+# default entrypoint of this docker image is /entrypoint.sh
+# so change it as your command
+
+docker stop vagrant4docker
+docker rm vagrant4docker
+
+#rm -rf $(pwd)/homedir
+#mkdir -p $(pwd)/homedir/{boxes,tmp,data}
+
+docker run -it -d \
+ --name vagrant4docker \
+ -v "/var/lib/libvirt:/var/lib/libvirt" \
+ -v "/var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock" \
+ -v "$(pwd)/vagranthome:/.vagrant.d" \
+ -v "$(pwd)/proj:/deb10" \
+ -v "$(pwd)/entrypoint.sh:/entrypoint.sh" \
+ --entrypoint "/entrypoint.sh" \
+ --network debswarm \
+ vagrantlibvirt/vagrant-libvirt:latest
+
+# ORIGINALLY ENTRYPOINT RUNS_AS VAGRANT USER
+
+exit

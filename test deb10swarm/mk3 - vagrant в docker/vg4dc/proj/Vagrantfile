@@ -1,0 +1,35 @@
+# тема с запуском vagrant в docker, чтоб не засирать хостовую систему, 
+# для провижынга libvirt на хосте, 
+# сработает
+# ЕСЛИ
+# docker network для этого всего на хосте можно воткнуть в eth0 (это имя не занято). И внутри контейнера тоже eth0.
+# (иначе не срабатывает сеть. - либо vm ее не видит, либо vagrant в docker не может подтвердить запуск ssh)
+# (вероятно, можно отбрить второе путем отключения перевтыка своего ключа vagrant`ом в vm)
+# и на хосте и в контейнере есть одинаковый путь /deb10 с ключом для ssh
+# (иначе либо vagrant up не стартует, не видя путь для sync_folder, либо libvirt не может подключить отсутствующий у нехо путь на хостовой машине
+# (а это можно отбрить отказом от sync_folder в пользу явного указания ключа в этом конфиге, типа provision shell echo "ssh_rsa тыры-пыры" >> /root/.ssh/id_rsa
+ 
+Vagrant.configure("2") do |config|
+(1..2).each do |i|
+    config.vm.define "vgnode#{i}" do |node|
+	node.vm.box = "generic/debian10"
+	node.vm.hostname = "deb10-vgnode#{i}"
+	node.vm.network :public_network,
+			:dev => "eth0",
+			:mode => "bridge",
+			:type => "bridge"
+	node.vm.provider "libvirt" do |kvm|
+	    kvm.default_prefix="deb10_"
+	    kvm.memory=512
+	    kvm.cpus=1
+	end
+	node.vm.provision "shell", inline: "hostnamectl set-hostname deb10-vgnode#{i}"
+	node.vm.synced_folder '/deb10/', '/deb10'
+	node.vm.provision "shell", inline: <<-SHELL
+	    mkdir /root/.ssh
+	    cat /deb10/id_rsa.pub >> /root/.ssh/authorized_keys
+#	    cat /deb10/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+	SHELL
+    end
+end
+end

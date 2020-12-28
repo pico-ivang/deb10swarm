@@ -1,0 +1,71 @@
+- hosts: allswarm
+  tasks:
+
+    - name: Installs standard kit of pkgs
+      apt:
+        name:
+        - screen
+        - htop
+        - mc
+        state: latest
+        update_cache: true
+
+    - name: Installs mosquitto client tools 
+      apt:
+        name:
+        - mosquitto-clients
+        state: latest
+        update_cache: true
+
+
+    - name: remove telemetry_send.sh from /srv
+      file:
+        path: /srv/telemetry_send.sh
+        state: absent
+
+    - name: remove telemetry cron file
+      file:
+        path: /etc/cron.d/telemetry
+        state: absent
+
+    - name: remove telemetry_send cron file 
+      file:
+        path: /etc/cron.d/telemetry-send
+        state: absent
+
+    - name: remove vsens cron file
+      file:
+        path: /etc/cron.d/vsens-send
+        state: absent
+
+
+
+    - name: Push mqtt.vars to /srv
+      copy: src=mqtt.vars dest=/srv/ mode=0644
+    - name: Push telemetry.sh to /srv
+      copy: src=telemetry.sh dest=/srv/ mode=0755
+
+    - name: Push vsens.vars to /srv
+      copy: src=vsens.vars dest=/srv/ mode=0644
+    - name: Push vsens.sh to /srv
+      copy: src=vsens.sh dest=/srv/ mode=0755
+
+    - name: Push telegram.vars to /srv
+      copy: src=telegram.vars dest=/srv/ mode=0644
+    - name: Push telegram.sh to /srv
+      copy: src=telegram_send.sh dest=/srv/ mode=0755
+
+
+    - name: adds telemetry cronjob
+      cron: minute="*/1"
+        name="every minute send telemetry"
+        cron_file="telemetry"
+        user="root"
+        job="/srv/telemetry.sh"
+
+    - name: adds vsesors send cronjob
+      cron: minute="*/30"
+        name="every 30min send vsensors"
+        cron_file="vsens-send"
+        user="root"
+        job="/srv/vsens.sh"
