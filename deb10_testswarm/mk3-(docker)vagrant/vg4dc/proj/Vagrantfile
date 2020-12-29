@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
 	    kvm.cpus=1
 	end
 	node.vm.provision "shell", inline: "hostnamectl set-hostname deb10-vgnode#{i}"
-	node.vm.synced_folder '/deb10/', '/deb10'
+	node.vm.synced_folder './', '/deb10'
 	node.vm.provision "shell", inline: <<-SHELL
 	    mkdir /root/.ssh
 	    cat /deb10/id_rsa.pub >> /root/.ssh/authorized_keys
