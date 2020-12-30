@@ -30,7 +30,7 @@ pipeline {
                 dir ('docker/telemetry') {
                 	sh 'docker build -t picoivang/imctelemetry:latest . '
                     sh 'docker save -o /home/docker/imctelemetry_latest.tar.gz'
-//                    sh 'ansible-playbook '
+//                      sh 'ansible-playbook '
                 }
             }
         }
