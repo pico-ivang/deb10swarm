@@ -27,8 +27,9 @@ pipeline {
             steps {
                 echo " ============== start building image =================="
                 dir ('./') {
+			sh 'rm -rf /home/deb10swarm && git clone git clone https://github.com/pico-ivang/deb10swarm /home/deb10swarm'
                 	sh 'docker build -t picoivang/imctelemetry:latest . '
-                    sh 'docker save -o /home/docker/imctelemetry_latest.tar.gz'
+                	sh 'docker save -o /home/docker/imctelemetry_latest.tar.gz'
 //                      sh 'ansible-playbook '
                 }
             }
