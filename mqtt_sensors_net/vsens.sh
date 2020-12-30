@@ -5,17 +5,17 @@
 # leak - датчик протечки
 
 function telegram_alert (){
-    /srv/telegram_send.sh "Alerta!!!   xolodilnik $nodename - $1 detected!"
+    $(pwd)/telegram_send.sh "Alerta!!!   xolodilnik $nodename - $1 detected!"
 }
 
-source /srv/mqtt.vars
+source $(pwd)/conf/mqtt.vars
 
-source /srv/vsens.vars
+source $(pwd)/vsens.vars
 
 # reading prev values
-leak=`cat /srv/leak.txt`
-t_in_prev=`cat /srv/t_in_prev.txt`
-t_mot_prev=`cat /srv/t_mot_prev.txt`
+leak=`cat /tmp/leak.txt`
+t_in_prev=`cat /tmp/t_in_prev.txt`
+t_mot_prev=`cat /tmp/t_mot_prev.txt`
 
 
 # what if no prev values
@@ -42,7 +42,7 @@ t_in=`shuf --input-range=$t_in_step --head-count=1`
 echo "t_in * t_in_sign + t_in_prev = " $t_in" * "$t_in_sign" + "$t_in_prev
 t_in=`expr  $t_in \* $t_in_sign + $t_in_prev`
 echo "new t_in = "$t_in
-echo $t_in > /srv/t_in_prev.txt
+echo $t_in > /tmp/t_in_prev.txt
 
 # alerting
 if [ $t_in -ge $t_in_alert ]; then telegram_alert "inner OVERHEATING"; fi
@@ -52,7 +52,7 @@ t_mot=`shuf --input-range=$t_mot_step --head-count=1`
 echo "t_mot * mod_sign + t_mot_prev = " $t_mot" * "$t_mot_sign" + "$t_mot_prev
 t_mot=`expr  $t_mot \* $t_mot_sign + $t_mot_prev`
 echo "new t_mot = "$t_mot
-echo $t_mot > /srv/t_mot_prev.txt
+echo $t_mot > /tmp/t_mot_prev.txt
 
 # alerting
 if [ $t_mot -ge $t_mot_alert ]; then telegram_alert "MOTOR OVERHEAT"; fi

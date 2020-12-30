@@ -3,7 +3,7 @@
 # если жив - то по какому адресу виден
 
 # load global vars
-source /srv/mqtt.vars
+source $(pwd)/conf/mqtt.vars
 
 echo " "
 echo " "
