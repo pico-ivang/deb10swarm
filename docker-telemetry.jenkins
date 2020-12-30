@@ -29,7 +29,7 @@ pipeline {
                 dir ('./') {
 			sh 'rm -rf /home/deb10swarm && git clone https://github.com/pico-ivang/deb10swarm /home/deb10swarm'
                 	sh 'docker build -t picoivang/imctelemetry:latest . '
-                	sh 'docker save -o /home/docker/imctelemetry_latest.tar.gz'
+                	sh 'docker save -o /home/docker/imctelemetry_latest.tar.gz picoivang/imctelemetry'
 //                      sh 'ansible-playbook '
                 }
             }
