@@ -47,6 +47,6 @@ echo "[######### ]"
 sleep 6
 echo "[##########]"
 
-$(pwd)\/set_node_hostname.sh $nodename
+$(pwd)/set_node_hostname.sh $nodename
 
 exit

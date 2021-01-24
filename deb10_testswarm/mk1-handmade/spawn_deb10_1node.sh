@@ -17,7 +17,7 @@ i=$1
 	--boot hd \
 	--os-variant debian9 \
 	--network bridge=$debswarm_bridge \
-	--graphics vnc,password=p0ssw@rt \
+	--graphics vnc,password=VncP@ss \
 	--memballoon model=virtio \
 	--noautoconsole
 
@@ -44,6 +44,6 @@ echo "[######### ]"
 sleep 6
 echo "[##########]"
 
-$(pwd)\/set_node_hostname.sh deb10node$i
+$(pwd)/set_node_hostname.sh deb10node$i
 
 exit

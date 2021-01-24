@@ -30,6 +30,4 @@ docker run -it -d \
  --network debswarm \
  vagrantlibvirt/vagrant-libvirt:latest
 
-# ORIGINALLY ENTRYPOINT RUNS_AS VAGRANT USER
-
 exit

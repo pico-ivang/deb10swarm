@@ -1,7 +1,0 @@
-- hosts: allswarm
-  tasks:
-    - name: Installs docker
-      apt: pkg=docker.io state=present update_cache=true
-
-    - name: create swarm with manager at ansible mashine
-      command: docker swarm join --token SWMTKN-1-0bn26vyz1pjcj8b2czqifwh315aslsm8wteohistwfglz170tf-4k5wlmm29fi3w15awil7kql8m 192.168.88.100:2377
