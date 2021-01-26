@@ -1,4 +1,6 @@
 - hosts: allswarm
+  remote_user: pupko
+  become: yes
   tasks:
 
     - name: Installs standard kit of pkgs
@@ -41,19 +43,19 @@
 
 
     - name: Push mqtt.vars to /srv
-      copy: src=mqtt.vars dest=/srv/ mode=0644
+      copy: src=payload/mqtt.vars dest=/srv/ mode=0644
     - name: Push telemetry.sh to /srv
-      copy: src=telemetry.sh dest=/srv/ mode=0755
+      copy: src=payload/telemetry.sh dest=/srv/ mode=0755
 
     - name: Push vsens.vars to /srv
-      copy: src=vsens.vars dest=/srv/ mode=0644
+      copy: src=payload/vsens.vars dest=/srv/ mode=0644
     - name: Push vsens.sh to /srv
-      copy: src=vsens.sh dest=/srv/ mode=0755
+      copy: src=payload/vsens.sh dest=/srv/ mode=0755
 
-    - name: Push telegram.vars to /srv
-      copy: src=telegram.vars dest=/srv/ mode=0644
+    - name: Push telegram.vars to /srv/
+      copy: src=payload/telegram.vars dest=/srv/ mode=0644
     - name: Push telegram.sh to /srv
-      copy: src=telegram_send.sh dest=/srv/ mode=0755
+      copy: src=payload/telegram_send.sh dest=/srv/ mode=0755
 
 
     - name: adds telemetry cronjob
@@ -69,3 +71,5 @@
         cron_file="vsens-send"
         user="root"
         job="/srv/vsens.sh"
+    - name: restart cron
+      command: systemctl restart cron

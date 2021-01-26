@@ -2,8 +2,9 @@
 # скрипт отправляет телеметрию хоста - больше чтоб держать руку на пульсу шлюза
 # если жив - то по какому адресу виден
 
-# load global vars
-source $(pwd)/conf/mqtt.vars
+cd /srv
+
+source $(pwd)/mqtt.vars
 
 echo " "
 echo " "

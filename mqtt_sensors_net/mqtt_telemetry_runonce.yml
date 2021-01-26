@@ -1,8 +1,7 @@
 - hosts: allswarm
+  remote_user: pupko
   tasks:
     - name: telemetry.sh
       command: /srv/telemetry.sh
     - name: vsens.sh
       command: /srv/vsens.sh
-    - name: restart cron
-      command: systemctl restart cron

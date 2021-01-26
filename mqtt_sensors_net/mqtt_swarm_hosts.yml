@@ -1,0 +1,3 @@
+allswarm:
+  hosts:
+    imc-aznode[0:4].westeurope.cloudapp.azure.com

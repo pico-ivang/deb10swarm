@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source $(pwd)/conf/telegram.vars
+cd /srv
+
+source $(pwd)/telegram.vars
 
 SendText=$1
 

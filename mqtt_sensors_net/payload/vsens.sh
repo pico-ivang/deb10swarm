@@ -4,11 +4,13 @@
 # t_mot - темп мотора
 # leak - датчик протечки
 
+cd /srv
+
 function telegram_alert (){
     $(pwd)/telegram_send.sh "Alerta!!!   xolodilnik $nodename - $1 detected!"
 }
 
-source $(pwd)/conf/mqtt.vars
+source $(pwd)/mqtt.vars
 
 source $(pwd)/vsens.vars
 
