@@ -8,7 +8,7 @@ apt-get install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base
 
 apt-get install libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
 
-gem install nokogiri -v 1.10.10
+gem install nokogiri --platform=ruby
 
 vagrant plugin install vagrant-libvirt
 
