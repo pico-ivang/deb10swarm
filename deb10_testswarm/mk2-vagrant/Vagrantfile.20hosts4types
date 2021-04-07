@@ -1,0 +1,108 @@
+Vagrant.configure("2") do |config|
+(1..5).each do |i|
+#
+##  CREATE 5 CENTOS-7
+#
+    config.vm.define "cattle70#{i}" do |node|
+        node.vm.box = "generic/centos7"
+        node.vm.hostname = "cattle70#{i}.polygon9.local"
+# eth0 will be bridged to virbr0.
+# adding this will cause eth1 appears and be bridged to kvmbr0
+        node.vm.network :public_network,
+         :bridge => "kvmbr0",
+         :dev => "kvmbr0",
+         :mode => "bridge",
+         :type => "bridge"
+        node.vm.provider "libvirt" do |kvm|
+            kvm.driver = "kvm"
+            kvm.default_prefix="cos7_"
+            kvm.memory=512
+            kvm.cpus=1
+        end
+        node.vm.provision "shell", inline: <<-SHELL
+# this two are obsolete
+#           hostnamectl set-hostname cattle70#{i}
+#           echo cattle70#{i}.polygon9.local > /etc/hostname
+            mkdir /root/.ssh
+            echo "ssh-rsa AAAA.......QnQnEn111 root@mgmt01" >> /root/.ssh/authorized_keys
+        SHELL
+    end
+    # this was the end of cos7-set creation
+#
+##  CREATE 5 CENTOS-8
+#
+    config.vm.define "cattle80#{i}" do |node|
+        node.vm.box = "generic/centos8"
+        node.vm.hostname = "cattle80#{i}.polygon9.local"
+        node.vm.network :public_network,
+         :bridge => "kvmbr0",
+         :dev => "kvmbr0",
+         :mode => "bridge",
+         :type => "bridge"
+        node.vm.provider "libvirt" do |kvm|
+            kvm.driver = "kvm"
+            kvm.default_prefix="cos8_"
+            kvm.memory=512
+            kvm.cpus=1
+        end
+        node.vm.provision "shell", inline: <<-SHELL
+#           hostnamectl set-hostname cattle80#{i}
+#           echo cattle80#{i}.polygon9.local > /etc/hostname
+            mkdir /root/.ssh
+            echo "ssh-rsa AAAA.......QnQnEn111 root@mgmt01" >> /root/.ssh/authorized_keys
+        SHELL
+    end
+#
+##  CREATE 5 DEBIAN-10
+#
+    config.vm.define "cattle100#{i}" do |node|
+        node.vm.box = "generic/debian10"
+        node.vm.hostname = "cattle100#{i}.polygon9.local"
+        node.vm.network :public_network,
+         :bridge => "kvmbr0",
+         :dev => "kvmbr0",
+         :mode => "bridge",
+         :type => "bridge"
+        node.vm.provider "libvirt" do |kvm|
+            kvm.driver = "kvm"
+            kvm.default_prefix="deb10_"
+            kvm.memory=512
+            kvm.cpus=1
+        end
+        node.vm.provision "shell", inline: <<-SHELL
+#           hostnamectl set-hostname cattle100#{i}
+#           echo cattle100#{i}.polygon9.local > /etc/hostname
+            mkdir /root/.ssh
+            echo "ssh-rsa AAAA.......QnQnEn111 root@mgmt01" >> /root/.ssh/authorized_keys
+        SHELL
+    end
+#
+##  CREATE 5 ubuntu-20.04
+#
+    config.vm.define "cattle200#{i}" do |node|
+        node.vm.box = "generic/ubuntu2004"
+        node.vm.hostname = "cattle200#{i}.polygon9.local"
+        node.vm.network :public_network,
+         :bridge => "kvmbr0",
+         :dev => "kvmbr0",
+         :mode => "bridge",
+         :type => "bridge"
+        node.vm.provider "libvirt" do |kvm|
+            kvm.driver = "kvm"
+            kvm.default_prefix="ub20_"
+            kvm.memory=512
+            kvm.cpus=1
+        end
+        node.vm.provision "shell", inline: <<-SHELL
+#           hostnamectl set-hostname cattle200#{i}
+#           echo cattle200#{i}.polygon9.local > /etc/hostname
+            mkdir /root/.ssh
+            echo "ssh-rsa AAAA.......QnQnEn111 root@mgmt01" >> /root/.ssh/authorized_keys
+        SHELL
+    end
+#
+#
+end
+# this was the end of 1:5 loop
+end
+# and this is the End. Thats all folks.
