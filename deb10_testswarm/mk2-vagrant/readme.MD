@@ -8,6 +8,9 @@ mk2. спавн роя средствами vagrant+vagrant-libvirt
 И установить его естественным для вашей хостовой оси способом.
 Он там, по идее, сам все, что нужно, прочпокает.
 
+далее
+apt-get build-dep vagrant ruby-libvirt
+
 Для юзера, который будет работать с vagrant-libvirt, запустите
 vagrant plugin install vagrant-libvirt
 
